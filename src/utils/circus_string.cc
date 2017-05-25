@@ -14,8 +14,8 @@ Circus_String::Circus_String(const char *latin)
     
 }
 
-Circus_String::Circus_String(const Circus_String &origin) {
-    : dptr(new StringPrivateData())
+Circus_String::Circus_String(const Circus_String &origin)
+    : dptr(new StringPrivateData()) {
     if (this != &origin) {
         *(this->dptr) = *(origin.dptr);
     }
