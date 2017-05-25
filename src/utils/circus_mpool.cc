@@ -113,15 +113,13 @@ void Circus_MemoryPool<__DataType>::destroy() {
 }
 
 template <typename __DataType>
-MemoryPoolItem* Circus_MemoryPool<__DataType>::dequeue()
-{
+MemoryPoolItem* Circus_MemoryPool<__DataType>::dequeue() {
     if (Full()) return NULL;
     return queue_[head_++ % item_max_];
 }
 
 template <typename __DataType>
-void Circus_MemoryPool<__DataType>::enqueue(MemoryPoolItem *item)
-{
+void Circus_MemoryPool<__DataType>::enqueue(MemoryPoolItem *item) {
     if (item)
         queue_[tail_++ % item_max_] = item;
 }
