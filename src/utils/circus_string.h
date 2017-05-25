@@ -1,11 +1,19 @@
-#ifndef __CIRCUS_STRING_H__
-#define __CIRCUS_STRING_H__
+#ifndef _CIRCUS_STRING_H_
+#define _CIRCUS_STRING_H_
 
-class CircusString {
+class Circus_String {
 public:
-  CircusString();
-  ~CircusString();
+    Circus_String();
+    Circus_String(const char *latin);
+    Circus_String(const Circus_String &origin);
+    ~Circus_String();
+  
+    Circus_String& operator = (const Circus_String &origin);
+    
+private:
+    class StringPrivateData;
+    StringPrivateData *dptr;
 };
 
-#endif // __CIRCUS_STRING_H__
+#endif // _CIRCUS_STRING_H_
 
