@@ -76,8 +76,9 @@ int32_t Circus_MemoryPool<__DataType>::GetIndex(__DataType* datap) {
 template <typename __DataType>
 int Circus_MemoryPool<__DataType>::init(uint32_t nsize, uint32_t esize) {
     // element aligned size in memory
-    uint32_t asize = (esize + sizeof (MemoryPoolItem) + alignment - 1) 
-                        / alignment * alignment;
+    //uint32_t asize = (esize + sizeof (MemoryPoolItem) + alignment - 1) 
+    //                    / alignment * alignment;
+    uint32_t asize = (esize + sizeof (MemoryPoolItem) + alignment - 1) & (~(alignment - 1))
 
     // |<--queue-->|<-----------------pool------------------>|
     // +--+-----+--+--------+-----------------------+--------+
