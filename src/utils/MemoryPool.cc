@@ -16,18 +16,20 @@
 #define container_of(ptr, type, member) ({ \
     (type *)( (char *)ptr - offsetof(type,member) );})
 
+namespace Circus {
+
 template <typename __DataType>
-Circus_MemoryPool<__DataType>::Circus_MemoryPool(uint32_t nsize) {
+MemoryPool<__DataType>::MemoryPool(uint32_t nsize) {
     init(nsize, sizeof(__DataType));
 }
 
 template <typename __DataType>
-Circus_MemoryPool<__DataType>::~Circus_MemoryPool()  {
+MemoryPool<__DataType>::~MemoryPool()  {
     destroy();
 }
 
 template <typename __DataType>
-void Circus_MemoryPool<__DataType>::Put(__DataType* datap) {
+void MemoryPool<__DataType>::Put(__DataType* datap) {
     if (datap)  {      
         MemoryPoolItem *it = container_of(datap, MemoryPoolItem, data);
         unsigned int r = it->ref;
@@ -37,7 +39,7 @@ void Circus_MemoryPool<__DataType>::Put(__DataType* datap) {
 }
 
 template <typename __DataType>
-__DataType* Circus_MemoryPool<__DataType>::Get() {
+__DataType* MemoryPool<__DataType>::Get() {
     __DataType *datap = NULL;
     MemoryPoolItem *it = dequeue();
     if (it) {
@@ -51,14 +53,14 @@ __DataType* Circus_MemoryPool<__DataType>::Get() {
 }
 
 template <typename __DataType>
-__DataType* Circus_MemoryPool<__DataType>::GetByIndex(uint32_t index) {
+__DataType* MemoryPool<__DataType>::GetByIndex(uint32_t index) {
     if (item_max_ < index) return NULL;
     MemoryPoolItem *datap = reinterpret_cast<MemoryPoolItem *>(pool_ + index * item_size_);
     return (__DataType *)(datap->data);
 }
 
 template <typename __DataType>
-int32_t Circus_MemoryPool<__DataType>::GetIndex(__DataType* datap) {
+int32_t MemoryPool<__DataType>::GetIndex(__DataType* datap) {
     if (datap && !Empty()) {
         MemoryPoolItem *it = container_of(datap, MemoryPoolItem, data);
         if (0 != it->ref) {
@@ -74,7 +76,7 @@ int32_t Circus_MemoryPool<__DataType>::GetIndex(__DataType* datap) {
 }
 
 template <typename __DataType>
-int Circus_MemoryPool<__DataType>::init(uint32_t nsize, uint32_t esize) {
+int MemoryPool<__DataType>::init(uint32_t nsize, uint32_t esize) {
     // element aligned size in memory
     //uint32_t asize = (esize + sizeof (MemoryPoolItem) + alignment - 1) 
     //                    / alignment * alignment;
@@ -109,21 +111,22 @@ int Circus_MemoryPool<__DataType>::init(uint32_t nsize, uint32_t esize) {
 }
 
 template <typename __DataType>
-void Circus_MemoryPool<__DataType>::destroy() {
+void MemoryPool<__DataType>::destroy() {
     if (mem_) delete mem_;
 }
 
 template <typename __DataType>
-MemoryPoolItem* Circus_MemoryPool<__DataType>::dequeue() {
+MemoryPoolItem* MemoryPool<__DataType>::dequeue() {
     if (Full()) return NULL;
     return queue_[head_++ % item_max_];
 }
 
 template <typename __DataType>
-void Circus_MemoryPool<__DataType>::enqueue(MemoryPoolItem *item) {
+void MemoryPool<__DataType>::enqueue(MemoryPoolItem *item) {
     if (item)
         queue_[tail_++ % item_max_] = item;
 }
 
-#undef container_of
+} // namespace Circus
 
+#undef container_of

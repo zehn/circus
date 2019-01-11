@@ -2,16 +2,18 @@
 #define _CIRCUS_MPOOL_H_
 #include <cstdint>
 
+namespace Circus {
+
 // reserved
 #define MPOOL_FLAG_MASK    0xff
 
-typedef struct _mpool_item {
-    unsigned int ref;
-    unsigned char data[0]; // it's tricky here 
-}MemoryPoolItem;
+struct MemoryPoolItem {
+        unsigned int ref;
+        unsigned char data[0]; // it's tricky here 
+};
 
 template <typename __DataType>
-class Circus_MemoryPool {
+class MemoryPool {
 public:
     enum MemoryPoolState {
         MemoryPoolInit  = 0x00,
@@ -19,8 +21,8 @@ public:
         MemoryPoolReady = 0x02
     }; // reserved
 
-    Circus_MemoryPool(uint32_t nsize);
-    ~Circus_MemoryPool();
+    MemoryPool(uint32_t nsize);
+    ~MemoryPool();
 
     // mpool is full means the queue is empty, as the queue
     // stores the pointers point to the items in pool.
@@ -78,7 +80,8 @@ private:
 };
 
 template <typename __DataType> 
-unsigned Circus_MemoryPool<__DataType>::alignment = 8;
+unsigned MemoryPool<__DataType>::alignment = 8;
+
+} // namespace Circus
 
 #endif // _CIRCUS_MPOOL_H_
-
